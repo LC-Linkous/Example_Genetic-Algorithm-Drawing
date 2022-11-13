@@ -2,7 +2,7 @@
 ## Table of contents
 * [Project Description](#Project-Description)
 * [Requirements](#Requirements)
-* [Method](#Method)
+* [How to Use](#How to Use)
 * [Results](#Results)
 * [Future Work](#Future-Work)
 * [References](#References)
@@ -10,12 +10,13 @@
 
 ## Project Description
 This project is modified from the code presented in the post "Painting the Starry Night with Genetic Algorithms" by 
-Samuel Hinton (2021-03-19) at https://cosmiccoding.com.au/tutorials/genetic_part_one This project does not currently 
-incorporate part II of the tutorial.
+Samuel Hinton (2021-03-19) at https://cosmiccoding.com.au/tutorials/genetic_part_one . It now also includes part two, 
+"Genetic Algorithms 2: Girl with a Pearl Earring" from https://cosmiccoding.com.au/tutorials/genetic_part_two
 
 This version is designed to work with wxPython instead of pygame to integrate into a currently existing machine learning
 GUI example. Other major changes that have been made include implementing a more rigid class-based structure to increase
-reusability, and plans for side-by-side comparisons of the effect of different tuning parameters on evolving images.
+reusability of individual classes, and plans for side-by-side comparisons of the effect of different tuning parameters 
+on evolving images.
 
 
 ## Requirements
@@ -50,11 +51,18 @@ TODO: GIFs/Images with params for examples of images drawn with the GA
 This example was designed to use a wxPython GUI instead of the popular pygame as a proof of concept
 for expanding into a currently existing machine learning demo GUI. However, this project is designed to 
 stand alone and has the following future work planned:
-* options for multiple organisms
 * options for drawing multiple images in side-by-side comparison
-* editing for consistency in vocab
 * documentation update with expanded references for further reading
+* code clean up for multi-organism (population2)  + increased control from user settings
+* cell inspiration from: https://blog.4dcu.be/programming/2020/02/10/Genetic-Art-Algorithm-2.html
+
+### Added features since initial commit
+* options for multiple organisms
+* editing for consistency in vocab of variables and function calls
 
 ## References
 
 * https://cosmiccoding.com.au/tutorials/genetic_part_one
+* https://cosmiccoding.com.au/tutorials/genetic_part_two
+
+

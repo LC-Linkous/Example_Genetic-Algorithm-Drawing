@@ -2,6 +2,8 @@
 #   GA_Drawing_Example
 #   'evolve_image.py'
 #   Main class for driving genetic algorithm.
+#   modified from: https://cosmiccoding.com.au/tutorials/genetic_part_one
+#
 #   Author: Lauren Linkous (LINKOUSLC@vcu.edu)
 #   October 30, 2022
 ##--------------------------------------------------------------------\
@@ -13,6 +15,7 @@ import wx
 
 # project file imports
 from population import Population
+from population2 import Population2
 from organism import Organism
 
 class EvolveImage:
@@ -30,6 +33,8 @@ class EvolveImage:
         self.ref = refImage #the reference image
 
         # user set vars
+        ## single organism or multi
+        self.singleOrganism = True
         ## evolution factors
         self.mutationRate = None
         self.scaleFactor = None
@@ -48,7 +53,7 @@ class EvolveImage:
          self.gui = gui
 
     def setEvolutionParams(self, mutationRate=0.01, scaleFactor=0.25,
-                           spawnChance=0.01, removeChance=0.01):
+                           spawnChance=0.01, removeChance=0.01, singleOrg=True):
         # user set vals
         # mutationRate = chance of mutation in an organism
         # scaleFactor =  the tuning factor for how much mutation propagates in evolution
@@ -59,18 +64,28 @@ class EvolveImage:
         self.scaleFactor = scaleFactor
         self.spawnChance = spawnChance
         self.removeChance = removeChance
+        self.singleOrganism = singleOrg
 
     def createPopulation(self):
-        self.pop = Population(self, self.ref)
+        if self.singleOrganism == True:
+            self.pop = Population(self, self.ref)
+        else:
+            self.pop = Population2(self, self.ref)
         self.pop.setUserParams(imgUpdate=self.imgUpdate, outdir=self.outputDir,
                                saveFile=self.save, summaryFile=self.summary)
 
     def setSimulationParams(self, steps=500000, imgUpdate=250,
-                            outputDir="output/", saveFile="save.npy", summaryFile="organismSummary.txt"):
+                            outputDir="output/", saveFile="save", summaryFile="organismSummary.txt"):
         self.steps = steps
         self.imgUpdate = imgUpdate
         self.outputDir = outputDir
-        self.save = saveFile
+        if saveFile == "save":
+            if self.singleOrganism == True:
+                self.save = saveFile + ".npy"
+            else:
+                self.save = saveFile + ".json"
+        else:
+            self.save = saveFile
         self.summary = summaryFile
         #if output directory doesnt exist, then create it:
         #create directories recursively:
@@ -78,12 +93,16 @@ class EvolveImage:
 
     def evolution(self):
         if os.path.exists(self.outputDir + self.save):
-            self.pop.currentBestOrganism = Organism(np.load(self.outputDir + self.save))
-            self.pop.calcFitness(self.pop.currentBestOrganism)
-            #get a sorted list of the images. start using the last image as the step for idxing
+            if self.singleOrganism  == True:
+                self.pop.currentBestOrganism = Organism(np.load(self.outputDir + self.save))
+                self.pop.calcFitness(self.pop.currentBestOrganism)
+            else:
+                self.pop.load(self.outputDir + self.save)
+
+            # get a sorted list of the images. start using the last image as the step for idxing
             filelist = [file for file in sorted(os.listdir(self.outputDir)) if file.endswith('.png')]
             num = filelist[-1].split('.')[0]
-            self.start = int(num) * self.imgUpdate #int converts from "XXX.png" to an int. mult by steps.
+            self.start = int(num) * self.imgUpdate  # int converts from "XXX.png" to an int. mult by steps.
             self.i = self.start
             print("Loading from save file at: ", self.outputDir + self.save)
             print("starting from step: #", self.i)
@@ -95,7 +114,7 @@ class EvolveImage:
 
     def loop(self):
         if self.start <= self.i < self.steps:
-            self.pop.step(self.i, rate=self.mutationRate, scale=self.scaleFactor,
+            self.pop.step(self.i, mutation=self.mutationRate, tuning=self.scaleFactor,
                           spawnChance=self.spawnChance, removeChance=self.removeChance)
             if self.i % 100 == 0:
                 print("step # ", self.i)

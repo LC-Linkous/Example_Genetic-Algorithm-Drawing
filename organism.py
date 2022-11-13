@@ -2,6 +2,8 @@
 #   GA_Drawing_Example
 #   'organism.py'
 #   Class with smallest instance of a genetic algorithm
+#   modified from: https://cosmiccoding.com.au/tutorials/genetic_part_one
+#
 #   Author: Lauren Linkous (LINKOUSLC@vcu.edu)
 #   October 30, 2022
 ##--------------------------------------------------------------------\

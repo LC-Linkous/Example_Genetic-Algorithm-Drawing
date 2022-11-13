@@ -3,6 +3,8 @@
 #   'population.py'
 #   Class for a population of organisms. Uses 1 organism with X genes to draw.
 #   Contains functions for saving check points
+#   modified from: https://cosmiccoding.com.au/tutorials/genetic_part_one
+#
 #   Author: Lauren Linkous (LINKOUSLC@vcu.edu)
 #   October 30, 2022
 ##--------------------------------------------------------------------\
@@ -87,12 +89,12 @@ class Population:
         org.fitness = -np.mean(np.abs(diff)) - 1e-5 * org.chromosome.size
         org.visual = image
 
-    def step(self, time, rate=0.01, scale=0.1, spawnChance=0.3, removeChance=0.3):
+    def step(self, time, mutation=0.01, tuning=0.1, spawnChance=0.3, removeChance=0.3):
         # each step works by working like 'generations'.
         # the organism is mutated (or not) based on the user input parameters
         # If the new organism is better than the last one, we update to the new one
 
-        o = self.currentBestOrganism.mutate(mutation=rate, tuning=scale, spawnChance=spawnChance, removeChance=removeChance)
+        o = self.currentBestOrganism.mutate(mutation=mutation, tuning=tuning, spawnChance=spawnChance, removeChance=removeChance)
         self.calcFitness(o)
         if o.fitness > self.currentBestOrganism.fitness:
             self.currentBestOrganism = o
@@ -110,8 +112,8 @@ class Population:
             print("Check point # ", checkpt, " Current number of genes: ", self.currentGenes)
             with open(self.outDir + self.saveSummary, "a", encoding="utf-8") as f:
                 f.write("time: " + str(time) +
-                        "\tmutation: " + str(rate) +
-                        "\tscale: " + str(scale) +
+                        "\tmutation: " + str(mutation) +
+                        "\tscale: " + str(tuning) +
                         "\tspawn: " + str(spawnChance) +
                         "\tremove: " + str(removeChance) +
                         "\tgenes: " + str(self.currentGenes) + "\n")
