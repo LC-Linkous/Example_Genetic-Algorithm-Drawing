@@ -32,7 +32,8 @@ def main():
     #image evolver
     EI = EvolveImage(refImage) # access to reference image
     EI.addGUI(GF) #access to GUI for redraw
-    EI.setEvolutionParams(mutationRate=0.03, scaleFactor=0.25, spawnChance=0.20, removeChance=0.03, singleOrg=False)
+    EI.setEvolutionParams(mutationRate=0.03, scaleFactor=0.25, spawnChance=0.20, removeChance=0.03)
+    EI.setPopulationParams(singleOrg=False, numOrganisms=10, numGenes=10, numFeatures=6)
     EI.setSimulationParams(steps=100000, imgUpdate=200, outputDir=outputDir, saveFile="save.json") #save.npy if single
     EI.createPopulation()
     EI.startSimulation()

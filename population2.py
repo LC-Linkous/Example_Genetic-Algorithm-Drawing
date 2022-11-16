@@ -29,6 +29,7 @@ class Population2:
         #self.currentBestOrganism = None
 
         self.population = []
+        self.numOrg = 10 # number of organisms
 
         #user params
         self.imgUpdate = 250 # default = 250
@@ -65,12 +66,12 @@ class Population2:
         self.currentGenes = ctr     # set counter
         self.parent.gui.onPaint()   # trigger paint event
 
-    def spawn(self, popSize=30, numGenes=10, numFeatures=6):
+    def spawn(self, populationSize=30, numGenes=10, numFeatures=6):
         # create a population of individual organisms with
         # user controlled number of genes and features
         #  random(3, 4) creates 3 genes with 4 features
         # numGenes number of genes, with a complexity of
-        for i in range(popSize):
+        for i in range(populationSize):
             organism = Organism(random((numGenes, numFeatures)))
             self.population.append(organism)
             self.calcFitness(organism)

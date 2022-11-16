@@ -33,8 +33,11 @@ class EvolveImage:
         self.ref = refImage #the reference image
 
         # user set vars
-        ## single organism or multi
+        ## population settings
         self.singleOrganism = True
+        self.numOrganisms = 1
+        self.numGenes = 10
+        self.numFeatures = 6
         ## evolution factors
         self.mutationRate = None
         self.scaleFactor = None
@@ -53,7 +56,7 @@ class EvolveImage:
          self.gui = gui
 
     def setEvolutionParams(self, mutationRate=0.01, scaleFactor=0.25,
-                           spawnChance=0.01, removeChance=0.01, singleOrg=True):
+                           spawnChance=0.01, removeChance=0.01):
         # user set vals
         # mutationRate = chance of mutation in an organism
         # scaleFactor =  the tuning factor for how much mutation propagates in evolution
@@ -64,7 +67,16 @@ class EvolveImage:
         self.scaleFactor = scaleFactor
         self.spawnChance = spawnChance
         self.removeChance = removeChance
+
+
+    def setPopulationParams(self, singleOrg=True, numOrganisms=1, numGenes=10, numFeatures=6):
         self.singleOrganism = singleOrg
+        if self.singleOrganism == True:
+            self.numOrganisms = 1
+        else:
+            self.numOrganisms = numOrganisms
+        self.numGenes = numGenes
+        self.numFeatures = numFeatures
 
     def createPopulation(self):
         if self.singleOrganism == True:
@@ -107,7 +119,7 @@ class EvolveImage:
             print("Loading from save file at: ", self.outputDir + self.save)
             print("starting from step: #", self.i)
         else:
-            self.pop.spawn(numGenes=10, numFeatures=6)
+            self.pop.spawn(populationSize=self.numOrganisms, numGenes=self.numGenes, numFeatures=self.numFeatures)
             self.start = 0
 
         self.loop()
