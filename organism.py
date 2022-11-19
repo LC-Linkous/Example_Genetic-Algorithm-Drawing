@@ -5,7 +5,7 @@
 #   modified from: https://cosmiccoding.com.au/tutorials/genetic_part_one
 #
 #   Author: Lauren Linkous (LINKOUSLC@vcu.edu)
-#   October 30, 2022
+#   November 19, 2022
 ##--------------------------------------------------------------------\
 
 import numpy as np
@@ -14,10 +14,8 @@ from numpy.random import choice, random, normal
 class Organism:
     def __init__(self, genes):
         self.chromosome = np.clip(genes, 0, 1)
-        self.visual = None
-        self.fitness = None
 
-    def mutate(self, mutation=0.01, tuning=0.3, spawnChance=0.3, removeChance=0.3):
+    def mutate(self, mutationRate=0.01, scaleFactor=0.3, spawnChance=0.3, removeChance=0.3):
         #inputs are the chances for mutation and spawn, and the std dev.
 
         #make a static copy of the current chromosomes
@@ -42,7 +40,7 @@ class Organism:
 
                 a, b = choice(n_gene, 2, replace=False)
                 gene = np.atleast_2d(0.5 * (chromosome[a, :] + chromosome[b, :]))
-                gene += tuning * normal(size=(1, gene.size))
+                gene += scaleFactor * normal(size=(1, gene.size))
                 gene[:, 2] *= 0.2
                 chromosome = np.append(chromosome, gene, axis=0)
 
@@ -52,10 +50,10 @@ class Organism:
             # This tuning keeps the development of the organism heading in
             # the same direction and reduces the 'randomness' that
             # worked early on
-            num_mutations = 1 + int(mutation * chromosome.size)
+            num_mutations = 1 + int(mutationRate * chromosome.size)
             #update rate
             # make sure that it's never below a minimum threshold
-            updateRate = tuning / (1 + int(mutation * chromosome.size)) + 2e-6
+            updateRate = scaleFactor / (1 + int(mutationRate * chromosome.size)) + 2e-6
             ##updateRate = tuning / num_mutations
             # for all of the potential mutations,
             # pull a gene and feature from the chromosomes, and update

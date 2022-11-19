@@ -50,6 +50,7 @@ class Population:
         # for each gene, the x & y are pulled and scaled,
 
         ctr = 0
+
         for gene in org.chromosome:
             x, y, size, *hsl = gene     # get gene information
             draw_x = int(x * self.w)    # scale x for drawing
@@ -57,7 +58,7 @@ class Population:
             draw_size = int((size * scale + minSize) * self.w) # scale size
             c = tuple(map(lambda x: int(255 * x),  Color(hsl=hsl).rgb)) #convert color vals properly
             c = np.array(c) #convert to array
-            self.parent.gui.addCircle([draw_x, draw_y, draw_size, c]) #draw circle on parent GUI
+            self.parent.gui.addCircle([draw_x, draw_y, draw_size, c]) #draw shape on parent GUI
             ctr = ctr + 1           # increment for report
         self.currentGenes = ctr     # set counter
         self.parent.gui.onPaint()   # trigger paint event
@@ -89,12 +90,12 @@ class Population:
         org.fitness = -np.mean(np.abs(diff)) - 1e-5 * org.chromosome.size
         org.visual = image
 
-    def step(self, time, mutation=0.01, tuning=0.1, spawnChance=0.3, removeChance=0.3):
+    def step(self, time, mutationRate=0.01, scaleFactor=0.1, spawnChance=0.3, removeChance=0.3):
         # each step works by working like 'generations'.
         # the organism is mutated (or not) based on the user input parameters
         # If the new organism is better than the last one, we update to the new one
 
-        o = self.currentBestOrganism.mutate(mutation=mutation, tuning=tuning, spawnChance=spawnChance, removeChance=removeChance)
+        o = self.currentBestOrganism.mutate(mutationRate=mutationRate, scaleFactor=scaleFactor, spawnChance=spawnChance, removeChance=removeChance)
         self.calcFitness(o)
         if o.fitness > self.currentBestOrganism.fitness:
             self.currentBestOrganism = o
@@ -112,8 +113,8 @@ class Population:
             print("Check point # ", checkpt, " Current number of genes: ", self.currentGenes)
             with open(self.outDir + self.saveSummary, "a", encoding="utf-8") as f:
                 f.write("time: " + str(time) +
-                        "\tmutation: " + str(mutation) +
-                        "\tscale: " + str(tuning) +
+                        "\tmutation: " + str(mutationRate) +
+                        "\tscale: " + str(scaleFactor) +
                         "\tspawn: " + str(spawnChance) +
                         "\tremove: " + str(removeChance) +
                         "\tgenes: " + str(self.currentGenes) + "\n")
