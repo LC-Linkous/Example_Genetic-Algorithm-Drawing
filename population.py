@@ -6,7 +6,7 @@
 #   modified from: https://cosmiccoding.com.au/tutorials/genetic_part_one
 #
 #   Author: Lauren Linkous (LINKOUSLC@vcu.edu)
-#   October 30, 2022
+#   November 19, 2022
 ##--------------------------------------------------------------------\
 
 # python lib imports
@@ -32,6 +32,7 @@ class Population:
         self.outDir = ""
         self.saveFile = ""
         self.saveSummary = ""
+        self.square_length = 0.1
 
         # update info
         self.currentGenes = 0
@@ -52,14 +53,55 @@ class Population:
         ctr = 0
 
         for gene in org.chromosome:
-            x, y, size, *hsl = gene     # get gene information
-            draw_x = int(x * self.w)    # scale x for drawing
-            draw_y = int(y * self.h)    # scale y for drawing
-            draw_size = int((size * scale + minSize) * self.w) # scale size
-            c = tuple(map(lambda x: int(255 * x),  Color(hsl=hsl).rgb)) #convert color vals properly
-            c = np.array(c) #convert to array
-            self.parent.gui.addCircle([draw_x, draw_y, draw_size, c]) #draw shape on parent GUI
-            ctr = ctr + 1           # increment for report
+            for gene in org.chromosome:
+                # split known values from gene
+                # the first 2 values are always x and y
+                x = gene[0]
+                y = gene[1]
+                # the last 3 values are always hsl version of color
+                hsl = gene[-3:]
+
+                # what's going to be passed as args to the draw method
+                drawArr = []
+                # scale x and y and add
+                draw_x = int(x * self.w)  # scale x for drawing
+                drawArr.append(draw_x)
+                draw_y = int(y * self.h)  # scale y for drawing
+                drawArr.append(draw_y)
+
+                # update the gene list we can work with to not include the vals above
+                remaining_gene = gene[2:]  # remove x and y
+                remaining_gene = remaining_gene[:-3]  # remove hsl
+
+                # the rest of the values may or may not exist based on shape
+                # because coords are always (x,y) when drawing, we can use that to decide how to scale
+
+                if len(remaining_gene) == 1:
+                    # probably a 'size' val. i.e. radius of circle, length of side of polygon
+                    size = remaining_gene[0]
+                    draw_size = int((size * scale + minSize) * self.w)  # scale size
+                    drawArr.append(draw_size)
+                elif len(remaining_gene) == 0:  # square.
+                    # squares are drawn using static sizes for this example
+                    l = int((self.square_length * scale + minSize) * self.w)  # scale size
+                    drawArr.append(l)
+                    drawArr.append(l)
+                else:
+                    # shape that takes a height, width argument
+                    width = remaining_gene[0]
+                    height = remaining_gene[1]
+                    width = int((width * scale + minSize) * self.w)  # scale size
+                    height = int((height * scale + minSize) * self.w)  # scale size
+                    drawArr.append(width)
+                    drawArr.append(height)
+
+                # convert color vals from hsl to rgb (last 3 values of gene)
+                # ALWAYS the last value in the argument passed to the gui
+                c = tuple(map(lambda x: int(255 * x), Color(hsl=hsl).rgb))
+                drawArr.append(c)
+
+                self.parent.gui.addShape(drawArr)  # draw shape on parent GUI
+                ctr = ctr + 1  # increment for report
         self.currentGenes = ctr     # set counter
         self.parent.gui.onPaint()   # trigger paint event
 
