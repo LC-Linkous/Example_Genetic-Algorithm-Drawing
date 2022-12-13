@@ -1,0 +1,2 @@
+time: 0	mutation: 0.03	scale: 0.25	spawn: 0.2	remove: 0.03	genes: 10
+time: 0	mutation: 0.03	scale: 0.25	spawn: 0.2	remove: 0.03	genes: 10
