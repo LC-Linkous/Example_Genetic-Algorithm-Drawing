@@ -62,12 +62,13 @@ class GFrame(wx.Frame):
     def onPaint(self, event=None):
         # custom 'onPaint' event
         # takes optional event argument so that it can be called both by system and program
-
+        #print("paint event called")
         if len(self.shapes) < 1:
             # this can be commented out if it prints out too often
             # it's a good indicator that the event is being called too often if there's
             # an issue with a new shape/algorithm update
-            print("paint event called, but nothing to draw")
+            #print("paint event called, but nothing to draw")
+            #print("BAD")
             return
 
         bit = wx.Bitmap(c.PANEL_HEIGHT, c.PANEL_WIDTH)
@@ -76,7 +77,7 @@ class GFrame(wx.Frame):
         dc.Clear()
         for ci in self.shapes:
             # color is always the last value in the arr/tuple
-            col = ci[-1]
+            col = (0,0,0)
             # set color
             brush = wx.Brush(col)
             dc.SetBrush(brush)
@@ -87,9 +88,10 @@ class GFrame(wx.Frame):
             if self.shapeType == 0: # circle
                 dc.DrawCircle(ci[0], ci[1], ci[2])
             elif self.shapeType == 1 or self.shapeType == 2:  # square or rectangle
-                dc.DrawRectangle(ci[0], ci[1], ci[2], ci[3])
+                dc.DrawRectangle(ci[0], ci[1], 5, 10)
             else:
                 print("ERROR: shape type not recognized in GFrame. not drawing")
+        print("!!!!!!!!")
 
         #clear shapes because everything has been drawn
         self.shapes = []

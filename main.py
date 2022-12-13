@@ -49,7 +49,7 @@ def main():
     # set the evolution params - mutation rate, scale factor, gene spawn & remove chances
     EI.setEvolutionParams(mutationRate=0.03, scaleFactor=0.25, spawnChance=0.20, removeChance=0.03)
     # set the population - single/multiple organism options
-    EI.setPopulationParams(singleOrg=False, numOrganisms=10)
+    EI.setPopulationParams(singleOrg=True, numOrganisms=10)
     # set organism params - number of genes controls complexity and variability, shape of organism controls the feature space
     # organism shape options: 0 = circle, 1 = square, 2 = rectangle,
     # to set the length of the square, change self.square_length in population2.py at the top

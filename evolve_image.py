@@ -37,7 +37,7 @@ class EvolveImage:
         self.singleOrganism = True
         self.numOrganisms = 1
         self.numGenes = 10
-        self.numFeatures = 6
+        self.numFeatures = 3
         ## evolution factors
         self.mutationRate = None
         self.scaleFactor = None
@@ -88,7 +88,9 @@ class EvolveImage:
         elif self.organismShape == 1: # square
             # x loc, y loc, (r, g, b)
             # size is a set value for this example
-            self.numFeatures = 5
+            #self.numFeatures = 5
+            # X loc, Y loc, fill
+            self.numFeatures = 3
         elif self.organismShape == 2: # rectangle
             # x loc, y loc, width, height, (r, g, b)
             self.numFeatures = 7
@@ -163,7 +165,7 @@ class EvolveImage:
             print("Loading from save file at: ", self.outputDir + self.save)
             print("starting from step: #", self.i)
         else:
-            self.pop.spawn(populationSize=self.numOrganisms, numGenes=self.numGenes, numFeatures=self.numFeatures)
+            self.pop.spawn(numGenes=self.numGenes, numFeatures=self.numFeatures)
             self.start = 0
 
         self.loop()
