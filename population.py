@@ -68,10 +68,9 @@ class Population:
             drawArr.append(draw_x)
             draw_y = int(y * self.h)  # scale y for drawing
             drawArr.append(draw_y)
-            drawArr.append(presence)
 
             # update the gene list we can work with to not include the vals above
-            remaining_gene = gene[2:]  # remove x and y
+            #remaining_gene = gene[2:]  # remove x and y
             #remaining_gene = remaining_gene[:-3]  # remove hsl
 
             # the rest of the values may or may not exist based on shape
@@ -81,10 +80,14 @@ class Population:
             # shape that takes a height, width argument
             width = gene[2]
             height = gene[3]
-            width = int((width) * self.w)  # scale size
-            height = int((height) * self.w)  # scale size
+            #width = int((width) * self.w)  # scale size
+            #height = int((height) * self.w)  # scale size
+            width = 10
+            height = 10
             drawArr.append(width)
             drawArr.append(height)
+
+            drawArr.append(round(presence))
 
             # convert color vals from hsl to rgb (last 3 values of gene)
             # ALWAYS the last value in the argument passed to the gui
@@ -104,6 +107,7 @@ class Population:
 
         # in this case only a single individual is created
         random_genes = random((numGenes, numFeatures))
+        print(random_genes)
         self.currentBestOrganism = Organism(random_genes)
         self.calcFitness(self.currentBestOrganism)
 
