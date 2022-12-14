@@ -20,7 +20,7 @@ def main():
     # path to reference image and the output directory for checkpoints and reports
     # img = "images/starrynight.jpg"
     # outputDir = "output-starry/"
-    img = "images/pearl.png"
+    img = "images/black_picture.png"
     outputDir = "output-pearl/"
     # title for GUI window
     title = "GA Drawing:" + img
