@@ -90,7 +90,7 @@ class EvolveImage:
             # size is a set value for this example
             #self.numFeatures = 5
             # X loc, Y loc, fill
-            self.numFeatures = 3
+            self.numFeatures = 5
         elif self.organismShape == 2: # rectangle
             # x loc, y loc, width, height, (r, g, b)
             self.numFeatures = 7

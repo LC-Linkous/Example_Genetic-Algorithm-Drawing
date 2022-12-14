@@ -88,10 +88,10 @@ class GFrame(wx.Frame):
             if self.shapeType == 0: # circle
                 dc.DrawCircle(ci[0], ci[1], ci[2])
             elif self.shapeType == 1 or self.shapeType == 2:  # square or rectangle
-                dc.DrawRectangle(ci[0], ci[1], 5, 10)
+                dc.DrawRectangle(ci[0], ci[1], ci[2], ci[3])
             else:
                 print("ERROR: shape type not recognized in GFrame. not drawing")
-        print("!!!!!!!!")
+        #print("!!!!!!!!")
 
         #clear shapes because everything has been drawn
         self.shapes = []

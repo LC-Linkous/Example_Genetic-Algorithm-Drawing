@@ -58,7 +58,7 @@ class Population:
             x = gene[0]
             y = gene[1]
             # the last 3 values are always hsl version of color
-            presence = gene[2]
+            presence = gene[4]
             #hsl = gene[-3:]
 
             # what's going to be passed as args to the draw method
@@ -71,7 +71,7 @@ class Population:
             drawArr.append(presence)
 
             # update the gene list we can work with to not include the vals above
-            #remaining_gene = gene[2:]  # remove x and y
+            remaining_gene = gene[2:]  # remove x and y
             #remaining_gene = remaining_gene[:-3]  # remove hsl
 
             # the rest of the values may or may not exist based on shape
@@ -79,19 +79,19 @@ class Population:
 
 
             # shape that takes a height, width argument
-            # width = gene[0]
-            # height = gene[1]
-            # width = int((width * scale + minSize) * self.w)  # scale size
-            # height = int((height * scale + minSize) * self.w)  # scale size
-            # drawArr.append(width)
-            # drawArr.append(height)
+            width = gene[2]
+            height = gene[3]
+            width = int((width) * self.w)  # scale size
+            height = int((height) * self.w)  # scale size
+            drawArr.append(width)
+            drawArr.append(height)
 
             # convert color vals from hsl to rgb (last 3 values of gene)
             # ALWAYS the last value in the argument passed to the gui
             #c = tuple(map(lambda x: int(0), 0,0)
             #drawArr.append(c)
-
-            #self.parent.gui.addShape(drawArr)  # draw shape on parent GUI
+            print(drawArr)
+            self.parent.gui.addShape(drawArr)  # draw shape on parent GUI
             ctr = ctr + 1  # increment for report
         self.currentGenes = ctr     # set counter
         self.parent.gui.onPaint()   # trigger paint event
