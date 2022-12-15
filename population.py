@@ -82,8 +82,8 @@ class Population:
             height = gene[3]
             #width = int((width) * self.w)  # scale size
             #height = int((height) * self.w)  # scale size
-            width = 10
-            height = 10
+            width = c.RES
+            height = c.RES
             drawArr.append(width)
             drawArr.append(height)
 
@@ -93,7 +93,7 @@ class Population:
             # ALWAYS the last value in the argument passed to the gui
             #c = tuple(map(lambda x: int(0), 0,0)
             #drawArr.append(c)
-            print(drawArr)
+            #print(drawArr)
             self.parent.gui.addShape(drawArr)  # draw shape on parent GUI
             ctr = ctr + 1  # increment for report
         self.currentGenes = ctr     # set counter

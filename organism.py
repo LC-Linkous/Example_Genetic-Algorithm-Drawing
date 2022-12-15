@@ -14,6 +14,20 @@ from numpy.random import choice, random, normal
 class Organism:
     def __init__(self, genes):
         self.chromosome = np.clip(genes, 0, 1)
+        self.xsize = 350
+        self.ysize = 350
+        self.bitarray = np.zeros((self.xsize, self.ysize), dtype=np.uint8)
+        #print(self.bitarray)
+        self.seedpatch() # move this somewhere else eventually
+        print("init yolo")
+
+    def seedpatch(self, width=20, height=20):
+        midx = int(self.xsize/2)
+        midy = int(self.ysize/2)
+
+        for idx in range(midx-int(width/2), midx+int(width/2)):
+            for jdx in range(midy-int(height/2), midy+int(height/2)):
+                self.bitarray[idx][jdx] = 1
 
     def mutate(self, mutationRate=0.01, scaleFactor=0.3, spawnChance=0.3, removeChance=0.3):
         #inputs are the chances for mutation and spawn, and the std dev.
@@ -62,4 +76,5 @@ class Organism:
             for i in range(num_mutations):
                 chromosome[choice(n_gene), choice(n_feats)] += normal() * updateRate
 
+        #self.chromosome = np.clip(chromosome, 0, 1) 
         return Organism(chromosome)
