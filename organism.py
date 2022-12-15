@@ -19,7 +19,7 @@ class Organism:
         self.bitarray = np.zeros((self.xsize, self.ysize), dtype=np.uint8)
         #print(self.bitarray)
         self.seedpatch() # move this somewhere else eventually
-        print("init yolo")
+        #print("init yolo")
 
     def seedpatch(self, width=20, height=20):
         midx = int(self.xsize/2)
