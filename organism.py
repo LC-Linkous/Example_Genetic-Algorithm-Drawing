@@ -12,22 +12,102 @@ import numpy as np
 from numpy.random import choice, random, normal
 
 class Organism:
-    def __init__(self, genes):
-        self.chromosome = np.clip(genes, 0, 1)
-        self.xsize = 350
-        self.ysize = 350
-        self.bitarray = np.zeros((self.xsize, self.ysize), dtype=np.uint8)
-        #print(self.bitarray)
-        self.seedpatch() # move this somewhere else eventually
-        #print("init yolo")
+    def __init__(self, chrom):
+        self.chromosomes = chrom # bitArray: [[#,#,#], [#,#,#]....]
+        #print("org init chrom: ", self.chromosomes[35][35])
 
-    def seedpatch(self, width=20, height=20):
-        midx = int(self.xsize/2)
-        midy = int(self.ysize/2)
+    def mutate(self, freq=0, gain=0, targetFreq=3.5e9, minGain=3): # , freq, gain, targetFreq=2.4e9, minGain=4):
+        # Inputs:
+        # USE DEFAULT INPUTS. Call with mutate()
+        #  freq = a randomly generated number below
+        #  gain = a randomly generated number below
+        #  targetFreq = the ideal resonant frequency of the project. hardset. do not change
+        #  minGain = the minimum gain for a patch. hardset. do not change.
 
-        for idx in range(midx-int(width/2), midx+int(width/2)):
-            for jdx in range(midy-int(height/2), midy+int(height/2)):
-                self.bitarray[idx][jdx] = 1
+
+        #for testing.
+        # generate random freq between 2.5G and 4.5G
+        # generate random gain between 2 and 5
+
+
+        # create some kind of hardcoded spawn rate and cull rate
+        # these will need to be adjusted
+        baseSpawn = 0.25 # 25% chance
+        baseCull = 0.1
+        # so there's some value to these vars incase they're called before being created in the funcs below
+        spawnRate = baseSpawn
+        cullRate = baseCull
+
+        # for loop to do 100 times.
+
+            # get shape of self.chromosomes to set range of x and y random numbers
+            
+            #generate x and y as random nums. 0 to size of dimension
+            # check if max number is index or length (i.e. 400 vs 399)
+
+            # get the bit at self.chromosomes[x][y]
+
+            #freq function. 
+            # fDiff = targetF -freq
+            # use fDiff to create a scaling function
+            # alpha = some equation based on fDiff like (1-fDiff/targetF)
+            # there's probably some proper equation for this
+            # if fDiff >= 0:
+            #   frequency is too low, so increase spawn and decrease cull rates with an alpha (scale) val
+            #   an example:
+            #       s = baseSpawn+alpha OR adusted base on the alpha val equation to make this between 0 and 1
+            #       c = baseCull- alpha
+            # else: (fDiff < 0)
+            #   frequency is too high. do the same as above but in reverse. lower Spawn, increase cull
+
+            #gain function.
+            # this is a spawn boost only
+            # gDiff = minGain - gain
+            # gainBoost = 0 by default
+            # if gDiff >=0:
+            #   gain is too low, so increase spawn rate based on neighbors
+            #   get the # of neighbors for 2 rows around the bit. need to compensate for if at edge of matrix
+            #   gainBoost = some equation where more neighbors means more boost
+            # 
+            # else:
+            # nothing. gainBoost = 0 still. no else function
+
+
+            #take the vales from the frequency and gain functions, and make equation for actual spawn and cull rates
+            # spawnRate = s + gainBoost
+            # cullRate = c  (and gain might actually need to adjust cull too, so leave space for this)
+
+            # action to take:
+            # action = spawnRate-cullRate
+            # if action is positive, it'll spawn. if it's negative, it's a cull        
+
+            #check bit value for presence
+            # if presence ==1: 
+            #   if action >=0:
+            #       #nothing. there's something there and it's a spawn.
+            #   else:
+            #       #cull. 
+            # else: (presence ==0)
+            #   if action >=0:
+            #       #add
+            #   else:
+            #       #nothing. nothing there and it's a cull 
+ 
+
+        return Organism(self.chromosomes)
+
+
+
+
+
+
+
+
+
+
+
+
+    # LEAVE FOR REFERENCE:
 
     # def mutate(self, mutationRate=0.01, scaleFactor=0.3, spawnChance=0.3, removeChance=0.3):
     #     #inputs are the chances for mutation and spawn, and the std dev.

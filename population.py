@@ -13,10 +13,15 @@
 from colour import Color
 from numpy.random import random
 import numpy as np
+import sys
 
 # project file imports
 from organism import Organism
 import constants as c
+
+# import antenna calculator
+sys.path.insert(0, './AntennaCalculator')
+from AntennaCalculator.antenna_calculator import AntennaCalculator
 
 class Population:
     def __init__(self, parent, ref):
@@ -50,54 +55,51 @@ class Population:
         # draw the organism (the collection of genes) on the gui canvas
         # for each gene, the x & y are pulled and scaled,
 
-        ctr = 0
 
-        for gene in org.chromosome:
-            # split known values from gene
-            # the first 2 values are always x and y
-            x = gene[0]
-            y = gene[1]
-            # the last 3 values are always hsl version of color
-            presence = gene[4]
-            #hsl = gene[-3:]
-
-            # what's going to be passed as args to the draw method
-            drawArr = []
-            # scale x and y and add
-            draw_x = int(x * self.w)  # scale x for drawing
-            drawArr.append(draw_x)
-            draw_y = int(y * self.h)  # scale y for drawing
-            drawArr.append(draw_y)
-
-            # update the gene list we can work with to not include the vals above
-            #remaining_gene = gene[2:]  # remove x and y
-            #remaining_gene = remaining_gene[:-3]  # remove hsl
-
-            # the rest of the values may or may not exist based on shape
-            # because coords are always (x,y) when drawing, we can use that to decide how to scale
+        # bitArr -> pixel
+        # 2d mat -> chrom/gene list [[x,y,w,h,pres, col]....]
 
 
-            # shape that takes a height, width argument
-            width = gene[2]
-            height = gene[3]
-            #width = int((width) * self.w)  # scale size
-            #height = int((height) * self.w)  # scale size
-            width = c.RES
-            height = c.RES
-            drawArr.append(width)
-            drawArr.append(height)
 
-            drawArr.append(round(presence))
+        ctr=0
+        xctr=0
+        yctr=0
 
-            # convert color vals from hsl to rgb (last 3 values of gene)
-            # ALWAYS the last value in the argument passed to the gui
-            #c = tuple(map(lambda x: int(0), 0,0)
-            #drawArr.append(c)
-            #print(drawArr)
-            self.parent.gui.addShape(drawArr)  # draw shape on parent GUI
-            ctr = ctr + 1  # increment for report
+        for idx in org.chromosomes:
+            for jdx in idx:
+                # get the x,y vals
+                x = xctr
+                y = yctr
+                # scale x and y and add
+                width = c.PIX_RES # 2
+                height = c.PIX_RES
+                presence = jdx
+                if presence == 1:
+                    hsl = (0,0,0) # black
+                    ctr = ctr + 1 #will become self.currentGenes
+                else:
+                    hsl = (0,100,50) # white
+                #hsl = jdx[-3:]
+
+                drawArr = []
+                drawArr.append(x)
+                drawArr.append(y)
+                drawArr.append(width)
+                drawArr.append(height)
+                drawArr.append(presence)
+                drawArr.append(hsl)
+                self.parent.gui.addShape(drawArr)
+                #drawArr.append(x,y,width,height,presence,hsl)
+                #print(x,y,width,height,presence,hsl)
+                #print(drawArr)
+                yctr=yctr+1
+            xctr=xctr+1
+            yctr=0
+        xctr = 0
+        
         self.currentGenes = ctr     # set counter
-        self.parent.gui.onPaint()   # trigger paint event
+        #print("self.currentGenes: ", self.currentGenes)
+        self.parent.gui.onPaint()   # trigger paint event                
 
     def spawn(self, numGenes=1, numFeatures=3):
         # create a population of individual organisms with
@@ -106,9 +108,61 @@ class Population:
         # numGenes number of genes, with a complexity of
 
         # in this case only a single individual is created
-        random_genes = random((numGenes, numFeatures))
-        print(random_genes)
-        self.currentBestOrganism = Organism(random_genes)
+        #random_genes = random((numGenes, numFeatures))
+
+        #create bitArray here: 
+        # dimensions from calc: W, L, probe coords (x,y)
+        # dims/res = min W and L bits. #*1.5 = # of bits used in alg
+        # self.bitArray = 2d mat init to 0s <- full bitArray is chromosomes
+        # For loop: for loop: flip bits in seed patch to 1
+        # self.currentBestOrganism = Organism(self.bitArray)
+        # calcFitness(##)
+
+        #create bitArray here:
+
+        # dimensions from calc: W, L, probe coords (x,y)
+        # dims/res = min W and L bits. #*1.5 = # of bits used in alg
+
+        # replace cols and rows programmatically from calc
+        cols = 400
+        rows = 400
+
+        # bit array
+        chromosomes = [[0 for i in range(cols)] for j in range(rows)]
+        # print(chromosomes)
+
+        #seed 
+        midx = int(rows/2)
+        midy = int(cols/2)
+        #print("midx: ", midx, "\t midy: ", midy)
+        #print("res: ", c.RES)
+        #print("midx-int(40/c.RES): ", midx-int(10/c.RES))
+
+        #inputParams = ['rectangular_patch', '-f', c.FREQ, '-er', c.RELATIVE_PERMITTIVITY, '-h', c.SUBSTRATE_HEIGHT, '--variable_return']
+        inputParams = ['rectangular_patch', '-f', str(c.FREQ), '-er', str(c.RELATIVE_PERMITTIVITY), '-h', str(c.SUBSTRATE_HEIGHT), '--type', 'probe', '--variable_return']
+        shell = AntennaCalculator(inputParams)
+        args = shell.getArgs()
+        print(args)
+        shell.main(args)
+        [W, L, x0, y0] = shell.getCalcedParams()
+        print(W)
+        #W, L, x0, y0 = AntennaCalculator(inputParams)
+        #print(W)
+
+        ctr = 0
+        for idx in range(midx-int(30/2), midx+int(30/2)):
+            for jdx in range(midy-int(30/2), midy+int(30/2)):
+                chromosomes[idx][jdx] = 1
+                #print("idx: ", idx, "\t jdx: ", jdx)
+                ctr = ctr + 1
+
+        #print("expected number of 1s: ", ctr)
+        # print(chromosomes[0][0])
+        # print(chromosomes[midx][midy])
+        
+
+        #print(chromosomes)
+        self.currentBestOrganism = Organism(chrom=chromosomes)
         self.calcFitness(self.currentBestOrganism)
 
     def calcFitness(self, org):
@@ -117,25 +171,55 @@ class Population:
 
         #update the drawing
         self.drawOrganism(org)
+
+
+        #dont need the current image bc that's now display only
+        # pair down if possible, but need for display not math
         image = self.parent.gui.getCurrentImage()
         #get the current image
         im = image.GetDataBuffer()
         arr = np.frombuffer(im, dtype='uint8', count=-1, offset=0)
         # convert to array
         image = np.reshape(arr, (c.PANEL_HEIGHT, c.PANEL_WIDTH, 3))
-        diff = image - self.ref
-        org.fitness = -np.mean(np.abs(diff)) - 1e-5 * org.chromosome.size
+        #this stays
         org.visual = image
+
+       
+        # HFSS call
+        # # simulation run
+        # # data parsing
+        # # getting gain and frequency (current sim)
+
+
+        # do difference between Freq and Gain with the targets
+        # diff = image - self.ref
+
+        # difference functions for freqvs target and gain vs target to compare with current org
+        org.fitness = 0 #-np.mean(np.abs(diff)) - 1e-5 #* org.chromosomes.shape[0]
+
+
+        
 
     def step(self, time, mutationRate=0.01, scaleFactor=0.1, spawnChance=0.3, removeChance=0.3):
         # each step works by working like 'generations'.
         # the organism is mutated (or not) based on the user input parameters
         # If the new organism is better than the last one, we update to the new one
 
-        o = self.currentBestOrganism.mutate(mutationRate=mutationRate, scaleFactor=scaleFactor, spawnChance=spawnChance, removeChance=removeChance)
+
+
+        #update the mutate call
+        # this comparison stays
+        #o = self.currentBestOrganism.mutate(mutationRate=mutationRate, scaleFactor=scaleFactor, spawnChance=spawnChance, removeChance=removeChance)
+        
+        o = self.currentBestOrganism.mutate()
+       
         self.calcFitness(o)
-        if o.fitness > self.currentBestOrganism.fitness:
-            self.currentBestOrganism = o
+        # TEMP EDIT ONLY!!!!!!!
+        #if o.fitness > self.currentBestOrganism.fitness:
+        self.currentBestOrganism = o
+        #print("o.fitness: ", o.fitness)
+        #print("self.currentBestOrganism.fitness: ", self.currentBestOrganism.fitness)
+           
 
         #create a check point
         # + append to the summary file to keep track of what parameters are in use
@@ -145,7 +229,7 @@ class Population:
             checkpt = time/self.imgUpdate
             savePath = self.outDir + f"{time // self.imgUpdate:04d}.png"
             #save progress
-            np.save(self.outDir + self.saveFile, self.currentBestOrganism.chromosome)
+            np.save(self.outDir + self.saveFile, self.currentBestOrganism.chromosomes)
             self.parent.gui.saveImage(savePath)
             print("Check point # ", checkpt, " Current number of genes: ", self.currentGenes)
             with open(self.outDir + self.saveSummary, "a", encoding="utf-8") as f:

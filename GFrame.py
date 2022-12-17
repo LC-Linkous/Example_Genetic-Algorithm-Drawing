@@ -63,6 +63,7 @@ class GFrame(wx.Frame):
         # custom 'onPaint' event
         # takes optional event argument so that it can be called both by system and program
         #print("paint event called")
+
         if len(self.shapes) < 1:
             # this can be commented out if it prints out too often
             # it's a good indicator that the event is being called too often if there's
@@ -75,23 +76,35 @@ class GFrame(wx.Frame):
         dc = wx.MemoryDC(bit) # to draw on the new bitmap
         dc.SetBackground(wx.Brush("White"))
         dc.Clear()
-        for ci in self.shapes:
+        
+        for drawArr in self.shapes:
+            # [X loc, Y loc, pix w, pix h, presence, col as hsl]
+            x = drawArr[0]
+            y = drawArr[1]
+            w = drawArr[2]
+            h = drawArr[3]
+            #print("x: ", x)
+            #print("y: ", y)
+            #print("w: ", w)
+            #print("h: ", h)
+            #presence = drawArr[4]
+          
             # color is always the last value in the arr/tuple
-            col = (0,0,0)
+            col = drawArr[5]
+
+            # if presence == 1:
+            #     print("x: ", x)
+            #     print("y: ", y)
+            #     print("color values: ", col)
             # set color
-            brush = wx.Brush(col)
+            #print("col: ", col)
+            brush = wx.Brush(col) #wx.Colour(255,0,255))
             dc.SetBrush(brush)
             # set draw type
-            pen = wx.Pen(col)
+            pen = wx.Pen(col)# wx.Colour(255,0,255))
             dc.SetPen(pen)
             # call wx library for predefined shape
-            if self.shapeType == 0: # circle
-                dc.DrawCircle(ci[0], ci[1], ci[2])
-            elif self.shapeType == 1 or self.shapeType == 2:  # square or rectangle
-                dc.DrawRectangle(ci[0], ci[1], ci[2], ci[3])
-            else:
-                print("ERROR: shape type not recognized in GFrame. not drawing")
-        #print("!!!!!!!!")
+            dc.DrawRectangle(x, y, w, h)
 
         #clear shapes because everything has been drawn
         self.shapes = []
