@@ -1,0 +1,3 @@
+[submodule "AntennaCalculator"] 
+   path = AntennaCalculator 
+   url = git://github.com/Dollarhyde/AntennaCalculator
