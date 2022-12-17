@@ -14,6 +14,7 @@ from colour import Color
 from numpy.random import random
 import numpy as np
 import sys
+import math
 
 # project file imports
 from organism import Organism
@@ -78,7 +79,7 @@ class Population:
                     hsl = (0,0,0) # black
                     ctr = ctr + 1 #will become self.currentGenes
                 else:
-                    hsl = (0,100,50) # white
+                    hsl = (120,70,70) # white
                 #hsl = jdx[-3:]
 
                 drawArr = []
@@ -92,14 +93,17 @@ class Population:
                 #drawArr.append(x,y,width,height,presence,hsl)
                 #print(x,y,width,height,presence,hsl)
                 #print(drawArr)
-                yctr=yctr+1
-            xctr=xctr+1
-            yctr=0
-        xctr = 0
+                xctr=xctr+1
+            yctr=yctr+1
+            xctr=0
+        yctr = 0
         
         self.currentGenes = ctr     # set counter
         #print("self.currentGenes: ", self.currentGenes)
         self.parent.gui.onPaint()   # trigger paint event                
+
+    def valueConvert(self, val):
+        return math.ceil(int(val * 10000)/2)
 
     def spawn(self, numGenes=1, numFeatures=3):
         # create a population of individual organisms with
@@ -142,16 +146,21 @@ class Population:
         inputParams = ['rectangular_patch', '-f', str(c.FREQ), '-er', str(c.RELATIVE_PERMITTIVITY), '-h', str(c.SUBSTRATE_HEIGHT), '--type', 'probe', '--variable_return']
         shell = AntennaCalculator(inputParams)
         args = shell.getArgs()
-        print(args)
+        #print(args)
         shell.main(args)
         [W, L, x0, y0] = shell.getCalcedParams()
-        print(W)
+        W = self.valueConvert(W*0.75)
+        L = self.valueConvert(L*0.75)
+        x0 = self.valueConvert(x0)
+        y0 = self.valueConvert(y0)
+        print("W: ", W, "\t L: ", L, "\t x0: ", x0, "\t y0: ", y0)
+        #print(W_unpack*1000)
         #W, L, x0, y0 = AntennaCalculator(inputParams)
         #print(W)
 
         ctr = 0
-        for idx in range(midx-int(30/2), midx+int(30/2)):
-            for jdx in range(midy-int(30/2), midy+int(30/2)):
+        for idx in range(midx-int(L/2), midx+int(L/2)):
+            for jdx in range(midy-int(W/2), midy+int(W/2)):
                 chromosomes[idx][jdx] = 1
                 #print("idx: ", idx, "\t jdx: ", jdx)
                 ctr = ctr + 1
