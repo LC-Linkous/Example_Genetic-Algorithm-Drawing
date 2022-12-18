@@ -30,6 +30,30 @@ class Population:
         self.ref = ref
         self.w, self.h, *d = self.ref.shape
 
+        inputParams = ['rectangular_patch', '-f', str(c.FREQ), '-er', str(c.RELATIVE_PERMITTIVITY), '-h', str(c.SUBSTRATE_HEIGHT), '--type', 'probe', '--variable_return']
+        shell = AntennaCalculator(inputParams)
+        args = shell.getArgs()
+        #print(args)
+        shell.main(args)
+        [W, L, x0, y0] = shell.getCalcedParams()
+        self.W_calc = self.valueConvert(W) # do 75%
+        self.L_calc = self.valueConvert(L) # do 75%
+        self.W = self.valueConvert(W*0.75)
+        self.L = self.valueConvert(L*0.75)
+        self.x0_calc = self.valueConvert(x0)
+        self.y0_calc = self.valueConvert(y0)
+
+
+        if self.W_calc > self.L_calc:
+            self.rows = self.W_calc * 3
+            self.cols = self.W_calc * 3
+        else:
+            self.rows = self.L_calc * 3
+            self.cols = self.L_calc * 3
+
+        self.x0 = (int(self.cols/2)+int(self.L_calc/2)-int(self.x0_calc))
+        self.y0 = (int(self.rows/2))
+
         #evolution comparison params
         self.currentBestOrganism = None
 
@@ -76,11 +100,14 @@ class Population:
                 height = c.PIX_RES
                 presence = jdx
                 if presence == 1:
-                    hsl = (0,0,0) # black
+                    rgb = (0,0,0) #black
                     ctr = ctr + 1 #will become self.currentGenes
                 else:
-                    hsl = (120,70,70) # white
-                #hsl = jdx[-3:]
+                    rgb = (224,224,224) # white
+                
+                if (x == self.y0) and (y == self.x0):
+                    #print("x0, y0: ", x, y)
+                    rgb = (255,0,0)
 
                 drawArr = []
                 drawArr.append(x)
@@ -88,10 +115,10 @@ class Population:
                 drawArr.append(width)
                 drawArr.append(height)
                 drawArr.append(presence)
-                drawArr.append(hsl)
+                drawArr.append(rgb)
                 self.parent.gui.addShape(drawArr)
-                #drawArr.append(x,y,width,height,presence,hsl)
-                #print(x,y,width,height,presence,hsl)
+                #drawArr.append(x,y,width,height,presence,rgb)
+                #print(x,y,width,height,presence,rgb)
                 #print(drawArr)
                 xctr=xctr+1
             yctr=yctr+1
@@ -128,39 +155,30 @@ class Population:
         # dims/res = min W and L bits. #*1.5 = # of bits used in alg
 
         # replace cols and rows programmatically from calc
-        cols = 400
-        rows = 400
+        #cols = 402
+        #rows = 404
 
         # bit array
-        chromosomes = [[0 for i in range(cols)] for j in range(rows)]
+        chromosomes = [[0 for i in range(self.cols)] for j in range(self.rows)]
         # print(chromosomes)
 
         #seed 
-        midx = int(rows/2)
-        midy = int(cols/2)
+        midx = int(self.rows/2)
+        midy = int(self.cols/2)
         #print("midx: ", midx, "\t midy: ", midy)
         #print("res: ", c.RES)
         #print("midx-int(40/c.RES): ", midx-int(10/c.RES))
 
         #inputParams = ['rectangular_patch', '-f', c.FREQ, '-er', c.RELATIVE_PERMITTIVITY, '-h', c.SUBSTRATE_HEIGHT, '--variable_return']
-        inputParams = ['rectangular_patch', '-f', str(c.FREQ), '-er', str(c.RELATIVE_PERMITTIVITY), '-h', str(c.SUBSTRATE_HEIGHT), '--type', 'probe', '--variable_return']
-        shell = AntennaCalculator(inputParams)
-        args = shell.getArgs()
-        #print(args)
-        shell.main(args)
-        [W, L, x0, y0] = shell.getCalcedParams()
-        W = self.valueConvert(W*0.75)
-        L = self.valueConvert(L*0.75)
-        x0 = self.valueConvert(x0)
-        y0 = self.valueConvert(y0)
-        print("W: ", W, "\t L: ", L, "\t x0: ", x0, "\t y0: ", y0)
+
+        #print("W: ", W, "\t L: ", L, "\t x0: ", self.x0, "\t y0: ", self.y0)
         #print(W_unpack*1000)
         #W, L, x0, y0 = AntennaCalculator(inputParams)
         #print(W)
 
         ctr = 0
-        for idx in range(midx-int(L/2), midx+int(L/2)):
-            for jdx in range(midy-int(W/2), midy+int(W/2)):
+        for idx in range(midx-int(self.L/2), midx+int(self.L/2)):
+            for jdx in range(midy-int(self.W/2), midy+int(self.W/2)):
                 chromosomes[idx][jdx] = 1
                 #print("idx: ", idx, "\t jdx: ", jdx)
                 ctr = ctr + 1

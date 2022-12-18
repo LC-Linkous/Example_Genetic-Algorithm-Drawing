@@ -10,13 +10,14 @@
 
 import numpy as np
 from numpy.random import choice, random, normal
+import random
 
 class Organism:
     def __init__(self, chrom):
         self.chromosomes = chrom # bitArray: [[#,#,#], [#,#,#]....]
         #print("org init chrom: ", self.chromosomes[35][35])
 
-    def mutate(self, freq=0, gain=0, targetFreq=3.5e9, minGain=3): # , freq, gain, targetFreq=2.4e9, minGain=4):
+    def mutate(self, freq=0, gain=0, targetFreq=3.55e9, minGain=3): # , freq, gain, targetFreq=2.4e9, minGain=4):
         # Inputs:
         # USE DEFAULT INPUTS. Call with mutate()
         #  freq = a randomly generated number below
@@ -24,6 +25,10 @@ class Organism:
         #  targetFreq = the ideal resonant frequency of the project. hardset. do not change
         #  minGain = the minimum gain for a patch. hardset. do not change.
 
+        freq = random.uniform(2.5e9,4.5e9) #limit range on these
+        gain = random.uniform(2,5) #limit range on these
+        #targetFreq = 3.55e9 # these vals are set in the default func call
+        #minGain = 3
 
         #for testing.
         # generate random freq between 2.5G and 4.5G
@@ -37,6 +42,61 @@ class Organism:
         # so there's some value to these vars incase they're called before being created in the funcs below
         spawnRate = baseSpawn
         cullRate = baseCull
+
+        for i in range(100):
+            # get shape of self.chromosomes to set range of x and y random numbers
+            x = np.random.randint(0, len(self.chromosomes)) # rows
+            y = np.random.randint(0, len(self.chromosomes[0])) #cols
+
+            # get the bit at self.chromosomes[x][y]
+            presence = self.chromosomes[x][y]
+
+            #freq function. 
+            # fDiff = targetF -freq
+            fDiff = targetFreq - freq
+            # use fDiff to create a scaling function
+            # alpha = some equation based on fDiff like (1-fDiff/targetF)
+            # there's probably some proper equation for this
+            # if fDiff >= 0:
+            #   frequency is too low, so increase spawn and decrease cull rates with an alpha (scale) val
+            #   an example:
+            #       s = baseSpawn+alpha OR adusted base on the alpha val equation to make this between 0 and 1
+            #       c = baseCull- alpha
+            # else: (fDiff < 0)
+            #   frequency is too high. do the same as above but in reverse. lower Spawn, increase cull
+            if fDiff >= 0:
+                spawnRate = baseSpawn + fDiff/targetFreq
+                cullRate = baseCull - fDiff/targetFreq
+            else:
+                spawnRate = baseSpawn - fDiff/targetFreq
+                cullRate = baseCull + fDiff/targetFreq
+
+            #gain function.
+            # this is a spawn boost only
+            # gDiff = minGain - gain
+            gDiff = minGain - gain
+            # gainBoost = 0 by default
+            gainBoost = 0
+            # if gDiff >= 0:
+            #   gain is too low, so increase spawn rate
+            #   an example:
+            #       s = baseSpawn+gDiff
+            # else: (gDiff < 0)
+            #   gain is too high. do nothing
+            if gDiff >= 0:
+                gainBoost = gDiff
+
+            # spawn function
+            spawn = spawnRate + gainBoost
+            
+            action = spawnRate-cullRate
+
+            if presence == 1:
+                if action < 0:
+                    self.chromosomes[x][y] = 0
+            else:
+                if action >= 0:
+                    self.chromosomes[x][y] = 1
 
         # for loop to do 100 times.
 

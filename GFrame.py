@@ -18,7 +18,7 @@ import constants as c
 
 class GFrame(wx.Frame):
     def __init__(self, parent, title):
-        wx.Frame.__init__(self, parent=parent, title=title, size=(c.WIDTH, c.HEIGHT))
+        wx.Frame.__init__(self, parent=parent, title=title, size=(c.PANEL_WIDTH, c.PANEL_HEIGHT))
         self.panel = wx.Panel(self)
         self.panel.SetBackgroundColour("#E6E6E6")
         self.Bind(wx.EVT_PAINT, self.onPaint)
@@ -90,7 +90,7 @@ class GFrame(wx.Frame):
             #presence = drawArr[4]
           
             # color is always the last value in the arr/tuple
-            col = drawArr[5]
+            col = drawArr[-1]
 
             # if presence == 1:
             #     print("x: ", x)
