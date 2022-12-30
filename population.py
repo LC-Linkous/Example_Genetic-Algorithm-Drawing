@@ -15,6 +15,7 @@ from numpy.random import random
 import numpy as np
 import sys
 import math
+from array import *
 
 # project file imports
 from organism import Organism
@@ -42,6 +43,12 @@ class Population:
         self.L = self.valueConvert(L*0.75)
         self.x0_calc = self.valueConvert(x0)
         self.y0_calc = self.valueConvert(y0)
+        # print("W_calc: ", self.W_calc)
+        # print("L_calc: ", self.L_calc)
+        # print("W: ", self.W)
+        # print("L: ", self.L)
+        # print("x0_calc: ", self.x0_calc)
+        # print("y0_calc: ", self.y0_calc)
 
 
         if self.W_calc > self.L_calc:
@@ -50,6 +57,8 @@ class Population:
         else:
             self.rows = self.L_calc * 3
             self.cols = self.L_calc * 3
+        # print("rows: ", self.rows)
+        # print("cols: ", self.cols)
 
         self.x0 = (int(self.cols/2)+int(self.L_calc/2)-int(self.x0_calc))
         self.y0 = (int(self.rows/2))
@@ -87,43 +96,70 @@ class Population:
 
 
         ctr=0
-        xctr=0
-        yctr=0
+        # xctr=0
+        # yctr=0
+
+        # for idx in org.chromosomes:
+        #     for jdx in idx:
+        #         #print(org.chromosomes)
+        #         # get the x,y vals
+        #         x = xctr
+        #         y = yctr
+        #         # scale x and y and add
+        #         width = c.PIX_RES # 2
+        #         height = c.PIX_RES
+        #         presence = jdx
+        #         if presence == 1:
+        #             rgb = (0,0,0) #black
+        #             ctr = ctr + 1 #will become self.currentGenes
+        #         else:
+        #             rgb = (224,224,224) # white
+                
+        #         if (x == self.y0) and (y == self.x0):
+        #             #print("x0, y0: ", x, y)
+        #             rgb = (255,0,0)
+
+        #         drawArr = []
+        #         drawArr.append(x)
+        #         drawArr.append(y)
+        #         drawArr.append(width)
+        #         drawArr.append(height)
+        #         drawArr.append(presence)
+        #         drawArr.append(rgb)
+        #         self.parent.gui.addShape(drawArr)
+        #         #drawArr.append(x,y,width,height,presence,rgb)
+        #         #print(x,y,width,height,presence,rgb)
+        #         #print(drawArr)
+        #         xctr=xctr+1
+        #     yctr=yctr+1
+        #     xctr=0
+        # yctr = 0
 
         for idx in org.chromosomes:
-            for jdx in idx:
-                # get the x,y vals
-                x = xctr
-                y = yctr
-                # scale x and y and add
-                width = c.PIX_RES # 2
-                height = c.PIX_RES
-                presence = jdx
-                if presence == 1:
-                    rgb = (0,0,0) #black
-                    ctr = ctr + 1 #will become self.currentGenes
-                else:
-                    rgb = (224,224,224) # white
-                
-                if (x == self.y0) and (y == self.x0):
-                    #print("x0, y0: ", x, y)
-                    rgb = (255,0,0)
+            #print("idx: ", idx)
+            x = idx[0]
+            y = idx[1]
+            width = c.PIX_RES # 2
+            height = c.PIX_RES
+            presence = idx[2]
+            #print("x,y,pres: ", x, y, presence)
+            if presence == 1:
+                rgb = (0,0,0) #black
+                ctr = ctr + 1 #will become self.currentGenes
+            else:
+                rgb = (224,224,224) # white
+            if (x == self.y0) and (y == self.x0):
+                #print("x0, y0: ", x, y)
+                rgb = (255,0,0)
 
-                drawArr = []
-                drawArr.append(x)
-                drawArr.append(y)
-                drawArr.append(width)
-                drawArr.append(height)
-                drawArr.append(presence)
-                drawArr.append(rgb)
-                self.parent.gui.addShape(drawArr)
-                #drawArr.append(x,y,width,height,presence,rgb)
-                #print(x,y,width,height,presence,rgb)
-                #print(drawArr)
-                xctr=xctr+1
-            yctr=yctr+1
-            xctr=0
-        yctr = 0
+            drawArr = []
+            drawArr.append(x)
+            drawArr.append(y)
+            drawArr.append(width)
+            drawArr.append(height)
+            drawArr.append(presence)
+            drawArr.append(rgb)
+            self.parent.gui.addShape(drawArr)                
         
         self.currentGenes = ctr     # set counter
         #print("self.currentGenes: ", self.currentGenes)
@@ -159,7 +195,8 @@ class Population:
         #rows = 404
 
         # bit array
-        chromosomes = [[0 for i in range(self.cols)] for j in range(self.rows)]
+        #chromosomes = [[0 for i in range(self.cols)] for j in range(self.rows)]
+        chromosomes = []
         # print(chromosomes)
 
         #seed 
@@ -176,12 +213,30 @@ class Population:
         #W, L, x0, y0 = AntennaCalculator(inputParams)
         #print(W)
 
-        ctr = 0
-        for idx in range(midx-int(self.L/2), midx+int(self.L/2)):
-            for jdx in range(midy-int(self.W/2), midy+int(self.W/2)):
-                chromosomes[idx][jdx] = 1
-                #print("idx: ", idx, "\t jdx: ", jdx)
-                ctr = ctr + 1
+        # ctr = 0
+        # for idx in range(midx-int(self.L/2), midx+int(self.L/2)):
+        #     for jdx in range(midy-int(self.W/2), midy+int(self.W/2)):
+        #         chromosomes[idx][jdx] = 1
+        #         #print("idx: ", idx, "\t jdx: ", jdx)
+        #         ctr = ctr + 1
+
+        #ctr = 0
+        for idx in range(midx-int(self.W/2), midx+int(self.W/2)):
+            for jdx in range(midy-int(self.L/2), midy+int(self.L/2)):
+                # print("idx: ", idx, "\t jdx: ", jdx)
+                # print("midx: ", midx, "\t midy: ", midy)
+                # print("midx-idx: ", midx-idx, "\t midy-jdx: ", midy-jdx)
+                # print("(midx-idx)^2: ", (midx-idx)**2, "\t (midy-jdx)^2: ", (midy-jdx)**2)
+                # print("math.sqrt((midx-idx)^2 + (midy-jdx)^2): ", math.sqrt((midx-idx)**2 + (midy-jdx)**2))
+                chromosomes.append([idx, jdx, 1, math.sqrt((midx-idx)**2 + (midy-jdx)**2)])
+                #chromosomes.append([idx, jdx, 1, 0])
+                #ctr = ctr + 1
+        print("generating W", midx-int(self.W/2), "to", midx+int(self.W/2))
+        print("generating L", midy-int(self.L/2), "to", midy+int(self.L/2))
+        #print("chromosomes: ", chromosomes)
+        #print ("chromosomes: ", chromosomes)
+        #chromosomes.insert(index, [x, y, 1, math.sqrt((x-midx)^2 + (y-midy)^2)])
+
 
         #print("expected number of 1s: ", ctr)
         # print(chromosomes[0][0])
@@ -189,7 +244,7 @@ class Population:
         
 
         #print(chromosomes)
-        self.currentBestOrganism = Organism(chrom=chromosomes)
+        self.currentBestOrganism = Organism(chrom=chromosomes, row = self.rows, col = self.cols)
         self.calcFitness(self.currentBestOrganism)
 
     def calcFitness(self, org):

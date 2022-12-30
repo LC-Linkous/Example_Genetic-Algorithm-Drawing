@@ -11,10 +11,13 @@
 import numpy as np
 from numpy.random import choice, random, normal
 import random
+import math
 
 class Organism:
-    def __init__(self, chrom):
+    def __init__(self, chrom, row, col):
         self.chromosomes = chrom # bitArray: [[#,#,#], [#,#,#]....]
+        self.rows = row
+        self.cols = col
         #print("org init chrom: ", self.chromosomes[35][35])
 
     def mutate(self, freq=0, gain=0, targetFreq=3.55e9, minGain=3): # , freq, gain, targetFreq=2.4e9, minGain=4):
@@ -43,13 +46,24 @@ class Organism:
         spawnRate = baseSpawn
         cullRate = baseCull
 
-        for i in range(100):
+        
+        #for i in range(100):
+        ctr_neighbor = 0
+        ctr_spawn = 0
+        #rx = int(self.rows/2)
+        #ry = int(self.cols/2)
+        print("length ", len(self.chromosomes))
+        while(ctr_spawn < 100):
             # get shape of self.chromosomes to set range of x and y random numbers
-            x = np.random.randint(0, len(self.chromosomes)) # rows
-            y = np.random.randint(0, len(self.chromosomes[0])) #cols
+            #x = np.random.randint(0, len(self.chromosomes)) # rows
+            #y = np.random.randint(0, len(self.chromosomes[0])) #cols
 
+            #while((156-2 < rx <= 241-2) and (145-2 < ry <= 230-2)):
+            rx = np.random.randint(0, self.rows) # rows (L)
+            ry = np.random.randint(0, self.cols) #cols (W)
+            #print("rx ", rx, " ry ", ry)
             # get the bit at self.chromosomes[x][y]
-            presence = self.chromosomes[x][y]
+            #presence = self.chromosomes[x][y]
 
             #freq function. 
             # fDiff = targetF -freq
@@ -91,12 +105,84 @@ class Organism:
             
             action = spawnRate-cullRate
 
-            if presence == 1:
-                if action < 0:
-                    self.chromosomes[x][y] = 0
-            else:
-                if action >= 0:
-                    self.chromosomes[x][y] = 1
+            # if presence == 1:
+            #     if action < 0:
+            #         self.chromosomes[x][y] = 0
+            # else:
+            #     if action >= 0:
+            #         self.chromosomes[x][y] = 1
+
+            # scan if nearby
+            # for idx in self.chromosomes:
+            #     if (rx - 2 < idx[0] <= rx + 2) and (rx != idx[0]):
+            #         if (ry - 2 < idx[1] <= ry + 2) and (ry != idx[1]):
+            #             for tdx in self.chromosomes:
+            #                 if (tdx[0] == rx):
+            #                     if (tdx[1] == ry):
+            #                         raise StopIteration
+            #             if action >= 0:
+            #                 self.chromosomes.append([rx,ry,1,math.sqrt((int(self.rows/2)-rx)**2 + (int(self.cols/2)-ry)**2)])
+            #                 raise StopIteration
+            
+            
+            ctr_neighbor = 0
+            #print("length ", len(self.chromosomes))
+            for idx in self.chromosomes:
+                
+                #print("for")
+                if idx[0] == rx:
+                    if idx[1] == ry:
+                        #print("break")
+                        break
+                #if ((145 < ry <=241) and (145 < rx <= 230)):
+                #    break
+                #print("rx ", rx, " ry ", ry, " idx[0] ", idx[0], " idx[1] ", idx[1])
+                if ((rx - 2) < idx[0] < (rx + 3)) and (rx != idx[0]):
+                    if ((ry - 2) < idx[1] < (ry + 3)) and (ry != idx[1]):
+                        ctr_neighbor += 1
+                        #print("neighbor")
+                if rx == idx[0] and ry==idx[1]:
+                    print("!!!!!!")
+            
+            if (ctr_neighbor > 2):
+                #if(ctr_neighbor>6):
+                    #print("appending rx ", rx, "ry ", ry, "ctr_neighbor ", ctr_neighbor)
+                #if (145 < ry <=241) and (145 < rx <= 230):
+                #    print("inside the internal patch")
+                self.chromosomes.append([rx,ry,1,math.sqrt((int(self.rows/2)-rx)**2 + (int(self.cols/2)-ry)**2)])
+                #print(self.chromosomes[-1])
+                ctr_spawn += 1
+                #print("length ", len(self.chromosomes),"\n")
+                #ctr_neighbor = 0
+
+                            #print("nearby")
+                            #print ("rx: ", rx, "ry: ", ry)
+                            #print ("idx[0]: ", idx[0], "idx[1]: ", idx[1])
+                            #if action < 0:
+                            #    self.chromosomes.remove(idx)
+                            #else:
+                                #raise StopIteration
+
+                #print("length of chrom:: ", len(self.chromosomes))
+                #print("rx: ", rx, "ry: ", ry)
+
+                            
+                    
+
+                                #idx[2] = 1
+                                #idx[3] = math.sqrt((int(self.rows/2)-rx)**2 + (int(self.cols/2)-ry)**2)
+                    # if idx[0] == x and idx[1] == y:
+                    #     if action < 0:
+                    #         self.chromosomes.remove(idx)
+                    #     else:
+                    #         idx[2] = 1
+                    #         idx[3] = math.sqrt((int(self.rows/2)-x)**2 + (int(self.cols/2)-y)**2)
+                    #     break
+
+                #if action >= 0:
+                #   self.chromosomes.append([x,y,1,math.sqrt((int(self.parent.rows/2)-x)**2 + (int(self.parent.cols/2)-y)**2)])
+
+                #
 
         # for loop to do 100 times.
 
@@ -154,7 +240,7 @@ class Organism:
             #       #nothing. nothing there and it's a cull 
  
 
-        return Organism(self.chromosomes)
+        return Organism(self.chromosomes, self.rows, self.cols)
 
 
 
