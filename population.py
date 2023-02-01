@@ -58,8 +58,7 @@ class Population:
             x = gene[0]
             y = gene[1]
             # the last 3 values are always hsl version of color
-            presence = gene[4]
-            #hsl = gene[-3:]
+            hsl = gene[-3:]
 
             # what's going to be passed as args to the draw method
             drawArr = []
@@ -70,30 +69,36 @@ class Population:
             drawArr.append(draw_y)
 
             # update the gene list we can work with to not include the vals above
-            #remaining_gene = gene[2:]  # remove x and y
-            #remaining_gene = remaining_gene[:-3]  # remove hsl
+            remaining_gene = gene[2:]  # remove x and y
+            remaining_gene = remaining_gene[:-3]  # remove hsl
 
             # the rest of the values may or may not exist based on shape
             # because coords are always (x,y) when drawing, we can use that to decide how to scale
 
-
-            # shape that takes a height, width argument
-            width = gene[2]
-            height = gene[3]
-            #width = int((width) * self.w)  # scale size
-            #height = int((height) * self.w)  # scale size
-            width = c.RES
-            height = c.RES
-            drawArr.append(width)
-            drawArr.append(height)
-
-            drawArr.append(round(presence))
+            if len(remaining_gene) == 1:
+                #probably a 'size' val. i.e. radius of circle, length of side of polygon
+                size = remaining_gene[0]
+                draw_size = int((size * scale + minSize) * self.w)  # scale size
+                drawArr.append(draw_size)
+            elif len(remaining_gene) == 0: # square.
+                # squares are drawn using static sizes for this example
+                l = int((self.square_length * scale + minSize) * self.w)  # scale size
+                drawArr.append(l)
+                drawArr.append(l)
+            else:
+                #shape that takes a height, width argument
+                width = remaining_gene[0]
+                height = remaining_gene[1]
+                width = int((width * scale + minSize) * self.w)  # scale size
+                height = int((height * scale + minSize) * self.w)  # scale size
+                drawArr.append(width)
+                drawArr.append(height)
 
             # convert color vals from hsl to rgb (last 3 values of gene)
             # ALWAYS the last value in the argument passed to the gui
-            #c = tuple(map(lambda x: int(0), 0,0)
-            #drawArr.append(c)
-            #print(drawArr)
+            c = tuple(map(lambda x: int(255 * x),  Color(hsl=hsl).rgb))
+            drawArr.append(c)
+
             self.parent.gui.addShape(drawArr)  # draw shape on parent GUI
             ctr = ctr + 1  # increment for report
         self.currentGenes = ctr     # set counter

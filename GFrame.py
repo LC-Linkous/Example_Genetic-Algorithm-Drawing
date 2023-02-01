@@ -68,7 +68,7 @@ class GFrame(wx.Frame):
             # it's a good indicator that the event is being called too often if there's
             # an issue with a new shape/algorithm update
             #print("paint event called, but nothing to draw")
-            #print("BAD")
+            #Note: This event triggers far more often on linux systems than windows
             return
 
         bit = wx.Bitmap(c.PANEL_HEIGHT, c.PANEL_WIDTH)
@@ -77,7 +77,7 @@ class GFrame(wx.Frame):
         dc.Clear()
         for ci in self.shapes:
             # color is always the last value in the arr/tuple
-            col = (0,0,0)
+            col = ci[-1]
             # set color
             brush = wx.Brush(col)
             dc.SetBrush(brush)
@@ -91,7 +91,6 @@ class GFrame(wx.Frame):
                 dc.DrawRectangle(ci[0], ci[1], ci[2], ci[3])
             else:
                 print("ERROR: shape type not recognized in GFrame. not drawing")
-        #print("!!!!!!!!")
 
         #clear shapes because everything has been drawn
         self.shapes = []

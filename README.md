@@ -2,7 +2,7 @@
 ## Table of contents
 * [Project Description](#Project-Description)
 * [Requirements](#Requirements)
-* [How to Use](#How to Use)
+* [How to Use](#How-to-Use)
 * [Results](#Results)
 * [Future Work](#Future-Work)
 * [References](#References)
@@ -62,7 +62,13 @@ stand alone and has the following future work planned:
 
 ## References
 
+Original genetic algorithm drawing tutorial
 * https://cosmiccoding.com.au/tutorials/genetic_part_one
 * https://cosmiccoding.com.au/tutorials/genetic_part_two
+
+Images:
+* 
+* 
+* 
 
 

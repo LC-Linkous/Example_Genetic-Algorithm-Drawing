@@ -5,7 +5,7 @@
 #   modified from: https://cosmiccoding.com.au/tutorials/genetic_part_one
 #
 #   Author: Lauren Linkous (LINKOUSLC@vcu.edu)
-#   November 19, 2022
+#   February 01, 2023
 ##--------------------------------------------------------------------\
 
 # python lib imports
@@ -18,9 +18,7 @@ from evolve_image import EvolveImage    # class that controls
 def main():
 
     # path to reference image and the output directory for checkpoints and reports
-    # img = "images/starrynight.jpg"
-    # outputDir = "output-starry/"
-    img = "images/black_picture.png"
+    img = "images/pearl.png"
     outputDir = "output-pearl/"
     # title for GUI window
     title = "GA Drawing:" + img

@@ -70,7 +70,7 @@ class EvolveImage:
         print("evolution parameters set")
 
 
-    def setPopulationParams(self, singleOrg=True, numOrganisms=1): #, numGenes=10, numFeatures=6):
+    def setPopulationParams(self, singleOrg=True, numOrganisms=1):
         self.singleOrganism = singleOrg
         if self.singleOrganism == True:
             self.numOrganisms = 1
