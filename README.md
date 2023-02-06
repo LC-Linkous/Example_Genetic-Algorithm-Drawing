@@ -1,7 +1,7 @@
 # GA_Drawing_Example
 
 <p align="center">
- <img src="https://github.com/LC-Linkous/Example_Genetic-Algorithm-Drawing/blob/master/imgs/ga-example.PNG" width="400" height="400" >
+ <img src="https://github.com/LC-Linkous/Example_Genetic-Algorithm-Drawing/blob/main/imgs/ga-example.PNG" width="400" height="400" >
 </p>
 
 
