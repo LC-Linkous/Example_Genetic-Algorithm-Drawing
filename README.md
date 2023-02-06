@@ -55,6 +55,7 @@ stand alone and has the following future work planned:
 * documentation update with expanded references for further reading
 * code clean up for multi-organism (population2)  + increased control from user settings
 * cell inspiration from: https://blog.4dcu.be/programming/2020/02/10/Genetic-Art-Algorithm-2.html
+* interative UI for selecting start/pause/stop/save and single/multi organism options rather than using main.py for all configurations
 
 ### Added features since initial commit
 * options for multiple organisms
@@ -67,8 +68,8 @@ Original genetic algorithm drawing tutorial
 * https://cosmiccoding.com.au/tutorials/genetic_part_two
 
 Images:
-* 
-* 
-* 
+* Starry Night, Vincent van Gogh
+* Girl with a Pearl Earring, from Susan Herbert, Cats Galore: a Compendium of Cultured Cats, featured in https://www.huffpost.com/entry/cats-are-taking-over-famous-western-artworks_n_55e75737e4b0aec9f355c018, 
+
 
 
